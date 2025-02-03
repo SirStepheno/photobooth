@@ -487,7 +487,7 @@ Since late 2024 Wayland/labwc is the default on all new installations of RPiOS w
 chromium --kiosk --disable-features=Translate --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --touch-events=enabled --start-maximized http://localhost
 ```
 
-If you use Wayland/Wayfire modify `~/.config/wayfire.ini` as stated. 
+If you use Wayland/Wayfire modify `~/.config/wayfire.ini` as stated.
 
 ```
 [autostart]
