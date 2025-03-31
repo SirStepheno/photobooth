@@ -473,6 +473,7 @@ ioServer.on('connection', function (client) {
                 if (config.remotebuzzer.useleds && config.remotebuzzer.printled) {
                     printled.writeSync(1);
                 }
+                ioServer.emit('photobooth-socket', 'print');
                 break;
 
             case 'shutdown':

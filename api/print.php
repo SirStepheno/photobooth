@@ -27,6 +27,10 @@ try {
         throw new \Exception($config['print']['limit_msg']);
     }
 
+    if ($printManager->isImageAlreadyPrinted($_GET['filename'])) {
+        throw new \Exception("De foto is al een keer geprint!");
+    }
+
     $imageHandler = new Image();
     $imageHandler->debugLevel = $config['dev']['loglevel'];
     $vars['randomName'] = $imageHandler->createNewFilename('random');
@@ -180,8 +184,8 @@ if (!file_exists($vars['printFile'])) {
         // --- Add borders ---
         //
         // We add 100 pixels to the left and right and 200 pixels to the top and bottom.
-        $borderLR = ($origWidth * 0.05) / 2; // left/right border in pixels
-        $borderTB = ($newCompositeHeight * 0.02) / 2; // top/bottom border in pixels
+        $borderLR = (int) (($origWidth * 0.05) / 2); // left/right border in pixels
+        $borderTB = (int) (($newCompositeHeight * 0.015) / 2); // top/bottom border in pixels
 
         $finalWidth  = $origWidth + 2 * $borderLR;
         $finalHeight = $newCompositeHeight + 2 * $borderTB;

@@ -313,7 +313,10 @@ function initRemoteBuzzerFromDOM() {
         };
 
         api.qrcode = function () {
-            $('.qrbtn').trigger('click');
+            if (!$('.qrbtn').prop('disabled')) {
+                $('.qrbtn').trigger('click');
+                $('.qrbtn').prop('disabled', true);
+            }
         };
 
         return api;

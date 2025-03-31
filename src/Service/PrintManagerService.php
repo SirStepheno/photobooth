@@ -82,6 +82,37 @@ class PrintManagerService
     }
 
     /**
+     * Check if an image has already been printed by Stefan.
+     *
+     * @param string $imageName The original image name to check (e.g. "20250331_134400.jpg").
+     * @return bool True if the image has already been printed, false otherwise.
+     */
+    public function isImageAlreadyPrinted(string $imageName): bool
+    {
+        try {
+            if (file_exists($this->printDb) && is_readable($this->printDb)) {
+                $handle = fopen($this->printDb, 'r');
+                if (!$handle) {
+                    throw new \Exception('Failed to open print database.');
+                }
+
+                while (($line = fgets($handle)) !== false) {
+                    $columns = str_getcsv(trim($line));
+                    if (isset($columns[2]) && $columns[2] === $imageName) {
+                        fclose($handle);
+                        return true;
+                    }
+                }
+
+                fclose($handle);
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Get the total count of prints from either the print counter file or the print database.
      */
     public function getPrintCountFromCounter(): ?int
