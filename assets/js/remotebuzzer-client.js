@@ -90,6 +90,18 @@ function initRemoteBuzzerFromDOM() {
                             buttonController.move2usb();
                             break;
 
+                        case 'shutdown-now':
+                            buttonController.shutdownNow();
+                            break;
+
+                        case 'homescreen':
+                            buttonController.homescreen();
+                            break;
+
+                        case 'qrcode':
+                            buttonController.qrcode();
+                            break;
+
                         default:
                             break;
                     }
@@ -290,6 +302,18 @@ function initRemoteBuzzerFromDOM() {
             if (this.enabled() && !this.chromaCapture) {
                 photoBooth.thrill('move2usb');
             }
+        };
+
+        api.shutdownNow = function () {
+            photoBooth.thrill('shutdown-stefan');
+        };
+
+        api.homescreen = function () {
+            $('.homebtn').trigger('click');
+        };
+
+        api.qrcode = function () {
+            $('.qrbtn').trigger('click');
         };
 
         return api;

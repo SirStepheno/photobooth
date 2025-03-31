@@ -145,6 +145,68 @@ if (!file_exists($vars['printFile'])) {
                 throw new \Exception('Failed to crop image resource.');
             }
         }
+        
+        // Gatekeeper by Stefan
+        // Get the original dimensions
+        $origWidth  = imagesx($source);
+        $origHeight = imagesy($source);
+
+        // Check if the image has a 4:3 aspect ratio (allowing a small tolerance)
+        $expectedRatio = 4 / 3;
+        $actualRatio   = $origWidth / $origHeight;
+        if (abs($actualRatio - $expectedRatio) > 0.01) {
+            die("Error: Image must be 4:3. (Found ratio: $actualRatio)");
+        }
+
+        // --- Create a 4:6 composite by duplicating the 4:3 image vertically ---
+        //
+        // For a 4:3 image (e.g. 400×300), duplicating vertically yields 400×600,
+        // which corresponds to a 4×6 print (if you consider 400 as the “4‐inch” side).
+        $newCompositeHeight = $origHeight * 2;
+        $composite = imagecreatetruecolor($origWidth, $newCompositeHeight);
+        if (!$composite) {
+            die("Error: Could not create composite image.");
+        }
+
+        // Copy the original image into the top half
+        if (!imagecopy($composite, $source, 0, 0, 0, 0, $origWidth, $origHeight)) {
+            die("Error: Could not copy image to top half.");
+        }
+        // Copy the original image into the bottom half
+        if (!imagecopy($composite, $source, 0, $origHeight, 0, 0, $origWidth, $origHeight)) {
+            die("Error: Could not copy image to bottom half.");
+        }
+
+        // --- Add borders ---
+        //
+        // We add 100 pixels to the left and right and 200 pixels to the top and bottom.
+        $borderLR = ($origWidth * 0.05) / 2; // left/right border in pixels
+        $borderTB = ($newCompositeHeight * 0.02) / 2; // top/bottom border in pixels
+
+        $finalWidth  = $origWidth + 2 * $borderLR;
+        $finalHeight = $newCompositeHeight + 2 * $borderTB;
+
+        $finalImage = imagecreatetruecolor($finalWidth, $finalHeight);
+        if (!$finalImage) {
+            die("Error: Could not create final image with borders.");
+        }
+
+        // Fill the final image with a border color (here black)
+        $white = imagecolorallocate($finalImage, 0, 0, 0);
+        imagefill($finalImage, 0, 0, $white);
+
+        // Copy the composite image onto the final canvas at the proper offset
+        if (!imagecopy($finalImage, $composite, $borderLR, $borderTB, 0, 0, $origWidth, $newCompositeHeight)) {
+            die("Error: Could not copy composite image onto final canvas.");
+        }
+
+        $source = $finalImage;
+
+        imagedestroy($source);
+        imagedestroy($composite);
+        imagedestroy($finalImage);
+
+        // End of Stefan
 
         if ($processor !== null && $processor instanceof PrintProcessor && method_exists($processor, 'postProcessing')) {
             list($imageHandler, $vars, $config, $source) = $processor->postProcessing($imageHandler, $vars, $config, $source);
@@ -168,6 +230,33 @@ if (!file_exists($vars['printFile'])) {
         die();
     }
 }
+
+$pageSizes = [
+    "4x4" => "w288h288",
+    "2x4*2" => "w288h288-div2",
+    "4x3" => "w288h216",
+    "4x4+4x2" => "w288h288_w288h144",
+    "4x6" => "w288h432",
+    "4x3*2" => "w288h432-div2",
+    "2x4*3" => "w288h432-div3",
+    "4x8" => "w288h576",
+    "4x6+4x2" => "w288h432_w288h144",
+    "4x3*2+4x2" => "w288h432-div2_w288h144",
+    "4x4*2" => "w288h576-div2",
+    "2x4*4" => "w288h576-div4",
+    "4.5x3" => "w324h216",
+    "4.5x4" => "w324h288",
+    "4.5x4.5" => "w324h324",
+    "4.5x6" => "w324h432",
+    "4.5x3*2" => "w324h432-div2",
+    "4.5x6.75" => "w324h486",
+    "4.5x2*3" => "w324h432-div3",
+    "4.5x8" => "w324h576",
+    "4.5x4*2" => "w324h576-div2",
+    "4.5x2*4" => "w324h576-div4",
+    "4.5x6+4.5x2" => "w324h432_w324h144", 
+    "4.5x3*2+4.5x2" => "w324h432-div2_w324h144"
+];
 
 // print image
 $status = 'ok';

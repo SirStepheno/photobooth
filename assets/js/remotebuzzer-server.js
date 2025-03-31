@@ -475,6 +475,22 @@ ioServer.on('connection', function (client) {
                 }
                 break;
 
+            case 'shutdown':
+                const cmd = 'sudo ' + config.commands.shutdown;
+                console.log(cmd);
+                execSync(cmd);
+                break;
+
+            case 'homescreen':
+                ioServer.emit('photobooth-socket', 'homescreen');
+                ioServer.emit('photobooth-socket', 'completed');
+                break;
+
+            case 'qrcode':
+                ioServer.emit('photobooth-socket', 'qrcode');
+                ioServer.emit('photobooth-socket', 'completed');
+                break;
+
             default:
                 log('Received unknown command [', data, '] - ignoring');
                 break;
