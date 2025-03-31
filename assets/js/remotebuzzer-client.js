@@ -249,6 +249,10 @@ function initRemoteBuzzerFromDOM() {
                         photoBooth.thrill('chroma');
                     }
                 } else {
+                    // Reset qr button
+                    if ($('.qrbtn').prop('disabled')) {
+                        $('.qrbtn').prop('disabled', false);
+                    }
                     photoBooth.thrill('photo');
                 }
             }
@@ -269,6 +273,10 @@ function initRemoteBuzzerFromDOM() {
         api.takeCollage = function () {
             if (this.enabled() && !this.chromaCapture && config.collage.enabled) {
                 this.waitingToProcessCollage = false;
+                // Reset qr button
+                if ($('.qrbtn').prop('disabled')) {
+                    $('.qrbtn').prop('disabled', false);
+                }
                 photoBooth.thrill('collage');
             }
         };
