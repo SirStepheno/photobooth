@@ -113,11 +113,11 @@ class SyncToDrive {
         const command = [
             'rsync',
             '-a',
-            '-b',
             '--delete-before',
+            '-b',
             '--backup-dir=' + path.join(device.mountpoint, 'deleted'),
             '--ignore-existing',
-            '--include=\'*.{jpg,chk,gif,mp4}\'',
+            '--include=\'*.\'{jpg,chk,gif,mp4}',
             '--include=\'*/\'',
             '--exclude=\'*\'',
             '--prune-empty-dirs',
