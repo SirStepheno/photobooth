@@ -12,13 +12,13 @@ if ($config['button']['force_buzzer']) {
     echo '<div class="buzzer-message">' . $config['button']['buzzer_message'] . '</div>';
 } else {
     if ($config['picture']['enabled']) {
-        echo ComponentUtility::renderButton('takePhoto', $config['icons']['take_picture'], 'takePic');
+        echo ComponentUtility::renderButton('takePhoto', $config['icons']['take_picture'], 'takePic', true, ["class" => "gpio-green"]);
     }
     if ($config['custom']['enabled']) {
         echo ComponentUtility::renderButton($config['custom']['btn_text'], $config['icons']['take_custom'], 'takeCustom');
     }
     if ($config['collage']['enabled']) {
-        echo ComponentUtility::renderButton('takeCollage', $config['icons']['take_collage'], 'takeCollage');
+        echo ComponentUtility::renderButton('takeCollage', $config['icons']['take_collage'], 'takeCollage', true, ["class" => "gpio-orange"]);
     }
     if ($config['video']['enabled']) {
         echo ComponentUtility::renderButton('takeVideo', $config['icons']['take_video'], 'takeVideo');

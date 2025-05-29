@@ -13,13 +13,13 @@ if ($config['button']['homescreen']) {
 if ($config['ui']['result_buttons']) {
     if (!$config['button']['force_buzzer']) {
         if ($config['picture']['enabled']) {
-            echo ComponentUtility::renderButton('newPhoto', $config['icons']['take_picture'], 'newpic');
+            echo ComponentUtility::renderButton('newPhoto', $config['icons']['take_picture'], 'newpic', true, ["class" => "gpio-green"]);
         }
         if ($config['custom']['enabled']) {
             echo ComponentUtility::renderButton('newCustom', $config['icons']['take_custom'], 'newcustom');
         }
         if ($config['collage']['enabled']) {
-            echo ComponentUtility::renderButton('newCollage', $config['icons']['take_collage'], 'newcollage');
+            echo ComponentUtility::renderButton('newCollage', $config['icons']['take_collage'], 'newcollage', true, ["class" => "gpio-orange"]);
         }
         if ($config['video']['enabled']) {
             echo ComponentUtility::renderButton('newVideo', $config['icons']['take_video'], 'newvideo');
@@ -27,7 +27,7 @@ if ($config['ui']['result_buttons']) {
     }
 
     if ($config['qr']['enabled']) {
-        echo ComponentUtility::renderButton('qr', $config['icons']['qr'], 'qrbtn');
+        echo ComponentUtility::renderButton('qr', $config['icons']['qr'], 'qrbtn', true, ["class" => "gpio-white"]);
     }
     if ($config['gallery']['enabled']) {
         echo ComponentUtility::renderButton('gallery', $config['icons']['gallery'], 'gallerybtn');
@@ -38,7 +38,7 @@ if ($config['ui']['result_buttons']) {
 }
 
 if ($config['print']['from_result']) {
-    echo ComponentUtility::renderButton('print', $config['icons']['print'], 'printbtn');
+    echo ComponentUtility::renderButton('print', $config['icons']['print'], 'printbtn', true, ["class" => "gpio-blue"]);
 }
 if ($config['filters']['enabled']) {
     echo ComponentUtility::renderButton('selectFilter', $config['icons']['filter'], 'imageFilter');

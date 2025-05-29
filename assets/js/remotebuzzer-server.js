@@ -473,6 +473,23 @@ ioServer.on('connection', function (client) {
                 if (config.remotebuzzer.useleds && config.remotebuzzer.printled) {
                     printled.writeSync(1);
                 }
+                ioServer.emit('photobooth-socket', 'print');
+                break;
+
+            case 'shutdown':
+                const cmd = 'sudo ' + config.commands.shutdown;
+                console.log(cmd);
+                execSync(cmd);
+                break;
+
+            case 'homescreen':
+                ioServer.emit('photobooth-socket', 'homescreen');
+                ioServer.emit('photobooth-socket', 'completed');
+                break;
+
+            case 'qrcode':
+                ioServer.emit('photobooth-socket', 'qrcode');
+                ioServer.emit('photobooth-socket', 'completed');
                 break;
 
             default:

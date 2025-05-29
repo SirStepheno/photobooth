@@ -90,6 +90,18 @@ function initRemoteBuzzerFromDOM() {
                             buttonController.move2usb();
                             break;
 
+                        case 'shutdown-now':
+                            buttonController.shutdownNow();
+                            break;
+
+                        case 'homescreen':
+                            buttonController.homescreen();
+                            break;
+
+                        case 'qrcode':
+                            buttonController.qrcode();
+                            break;
+
                         default:
                             break;
                     }
@@ -237,6 +249,10 @@ function initRemoteBuzzerFromDOM() {
                         photoBooth.thrill('chroma');
                     }
                 } else {
+                    // Reset qr button
+                    if ($('.qrbtn').prop('disabled')) {
+                        $('.qrbtn').prop('disabled', false);
+                    }
                     photoBooth.thrill('photo');
                 }
             }
@@ -257,6 +273,10 @@ function initRemoteBuzzerFromDOM() {
         api.takeCollage = function () {
             if (this.enabled() && !this.chromaCapture && config.collage.enabled) {
                 this.waitingToProcessCollage = false;
+                // Reset qr button
+                if ($('.qrbtn').prop('disabled')) {
+                    $('.qrbtn').prop('disabled', false);
+                }
                 photoBooth.thrill('collage');
             }
         };
@@ -289,6 +309,21 @@ function initRemoteBuzzerFromDOM() {
         api.move2usb = function () {
             if (this.enabled() && !this.chromaCapture) {
                 photoBooth.thrill('move2usb');
+            }
+        };
+
+        api.shutdownNow = function () {
+            photoBooth.thrill('shutdown-stefan');
+        };
+
+        api.homescreen = function () {
+            $('.homebtn').trigger('click');
+        };
+
+        api.qrcode = function () {
+            if (!$('.qrbtn').prop('disabled')) {
+                $('.qrbtn').trigger('click');
+                $('.qrbtn').prop('disabled', true);
             }
         };
 

@@ -313,7 +313,7 @@ const photoboothTools = (function () {
                     } else if (data.error) {
                         api.console.log('ERROR: An error occurred: ', data.error);
                         api.overlay.showError(data.error);
-                        api.resetPrintErrorMessage(cb, config.print.time);
+                        api.resetPrintErrorMessage(cb, notificationTimeout);
                     } else {
                         setTimeout(function () {
                             api.overlay.close();

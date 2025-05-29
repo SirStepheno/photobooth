@@ -1092,7 +1092,30 @@ const photoBooth = (function () {
         photoboothTools.modal.open();
         const body = photoboothTools.modal.element.querySelector('.modal-body');
 
-        const image = document.createElement('img');
+        // Create and append a loader element (spinner or text)
+        let loader = document.createElement('div');
+        loader.className = 'loader'; // Style this class in your CSS as desired
+        loader.innerHTML = '<i class="fa fa-cog fa-spin"></i>';
+        body.appendChild(loader);
+
+        // Create the QR code image element
+        let image = document.createElement('img');
+        image.onload = function () {
+            // Remove loader once image has loaded
+            if (loader.parentNode) {
+                loader.parentNode.removeChild(loader);
+            }
+        };
+
+        // Optional: handle errors if needed
+        image.onerror = function () {
+            if (loader.parentNode) {
+                loader.parentNode.removeChild(loader);
+            }
+            console.error('Error loading QR code image.');
+        };
+
+        // Set the image source (the API endpoint)
         image.src = environment.publicFolders.api + '/qrcode.php?filename=' + filename;
         body.appendChild(image);
 
