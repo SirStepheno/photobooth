@@ -2,12 +2,22 @@
 
 /** @var array $config */
 
+use Photobooth\Service\RemoteStorageService;
 use Photobooth\Utility\PathUtility;
 use Photobooth\Utility\QrCodeUtility;
 
 require_once '../lib/boot.php';
 
 $filename = (isset($_GET['filename']) && $_GET['filename']) != '' ? $_GET['filename'] : false;
+
+if ($filename) {
+    $url = $config['qr']['url'];
+    if ($config['ftp']['enabled'] && $config['ftp']['useForQr']) {
+        $remoteStorageService = RemoteStorageService::getInstance();
+        $url = $remoteStorageService->getWebpageUri();
+        if ($config['qr']['append_filename']) {
+            $url .= '/images/';
+        }
 
 if ($filename || !$config['qr']['append_filename']) {
     if ($config['ftp']['enabled'] && $config['ftp']['useForQr'] && isset($config['ftp']['processedTemplate'])) {
@@ -65,6 +75,10 @@ if ($filename || !$config['qr']['append_filename']) {
     }
 
     }
+    if ($config['qr']['append_filename']) {
+        $url .= $filename;
+    }
+    $url = PathUtility::getPublicPath($url, true);
     try {
         $result = QrCodeUtility::create($url);
         header('Content-Type: ' . $result->getMimeType());
@@ -76,6 +90,7 @@ if ($filename || !$config['qr']['append_filename']) {
             echo $e->getMessage();
         }
     }
+
 } else {
     http_response_code(400);
     echo 'No filename defined.';
