@@ -520,7 +520,8 @@ class Collage
         }
 
         if (self::$collageWidth === 0) {
-            self::$collageWidth = intval(self::$collageHeight * 1.5);
+            // Changed standard collage ratio to 4:3 instead of 3:2
+            self::$collageWidth = intval(self::$collageHeight * (4 / 3));
         }
 
         $my_collage = imagecreatetruecolor(self::$collageWidth, self::$collageHeight);
