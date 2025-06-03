@@ -18,6 +18,8 @@ if ($filename) {
         if ($config['qr']['append_filename']) {
             $url .= '/images/';
         }
+    }
+}
 
 if ($filename || !$config['qr']['append_filename']) {
     if ($config['ftp']['enabled'] && $config['ftp']['useForQr'] && isset($config['ftp']['processedTemplate'])) {
